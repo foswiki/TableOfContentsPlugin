@@ -1,0 +1,66 @@
+%META:TOPICINFO{author="ProjectContributor" date="1420222138" format="1.1" version="1"}%
+---+!! %TOPIC%
+%FORMFIELD{"Description"}%
+
+%TOC%
+
+---++ Description
+
+The =%TOC= macro, which is a part of the Foswiki core, has been updated to use
+a real HTML parser to extract headings. That way, a =%TOC= can be placed in any
+place you want, such as in a view template or the sidebar of a topic. The
+standard implementation of =%TOC= wouldn't allow for this.
+
+The new %TOC is not a complete replacement due to the fundamental difference in
+operations. The original features, such as rendering a %TOC for a distant topic
+not directly part of the current page, are missing and may never be
+implemented.
+
+The plugin will replace the =%TOC= macro with its own version by default. To
+use both implementations simultaneously, the
+=$Foswiki::cfg{TableOfContentsPlugin}{ReplaceOriginalTOC}= setting can be
+disabled. The new implementation will be accessible as the =%TOC2= macro.
+
+---++ Syntax
+
+| *Parameter* | *Description* | *Default* |
+| header | string to be prepended to the result | |
+| format | format string for each heading found, see format tokens below | <verbatim>   $indent* <a href="$params$anchor">$text</a></verbatim> |
+| separator | string to be placed between each line of the toc | =\n= |
+| footer | string to be appended to the result | |
+| depth | maximum depth of headings being displayed, a zero means unrestricted | 0 |
+| title | toc title | |
+| pattern | regular expression that headings must match to be included in the output | |
+| global | boolean switch to enable "global" vs "local" rendering; in global mode will the toc render entries for the complete document; in local mode will it pick up where a previous toc left off thus rendering partial tocs | local |
+
+The =format= string may contain the following tokens:
+
+   * =$indent=: indentation based on the heading level of a toc entry
+   * =$text=: text of the toc entry
+   * =$anchor=: anchor of the heading to navigate to
+   * =$params=: url params of the page request
+
+Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= etc.
+
+---++ Installation Instructions
+%$INSTALL_INSTRUCTIONS%
+
+---++ Dependencies
+%$DEPENDENCIES%
+
+---++ Change History
+
+%TABLE{columnwidths="7em" tablewidth="100%"}%
+|  01 Feb 2024 | initial release |
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="Michael Daum"}%
+%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
+%META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
+%META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
+%META:FIELD{name="Copyright" value="2024 Michael Daum"}%
+%META:FIELD{name="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
+%META:FIELD{name="Repository" value="https://github.com/foswiki/%25TOPIC%25"}%
+%META:FIELD{name="Home" value="https://foswiki.org/Extensions/%25TOPIC%25"}%
+%META:FIELD{name="Support" value="https://foswiki.org/Support/%25TOPIC%25"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25TOPIC%25"}%
