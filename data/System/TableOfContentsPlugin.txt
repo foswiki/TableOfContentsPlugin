@@ -51,6 +51,7 @@ Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= et
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  30 Apr 2024 | keep img tags part of a heading in the toc entry |
 |  01 Feb 2024 | initial release |
 
 %META:FORM{name="PackageForm"}%

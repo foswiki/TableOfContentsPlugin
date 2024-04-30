@@ -63,13 +63,13 @@ sub new {
 
 =begin TML
 
----++ ObjectMethod DESTROY()
+---++ ObjectMethod finish()
 
 deletes the HTML::TreeBuilder delegate as well
 
 =cut
 
-sub DESTROY {
+sub finish {
   my $this = shift;
 
   $this->{tree}->delete if $this->{tree};

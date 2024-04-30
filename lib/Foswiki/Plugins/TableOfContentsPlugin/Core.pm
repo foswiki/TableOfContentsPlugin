@@ -53,15 +53,16 @@ sub new {
 
 =begin TML
 
----++ ObjectMethod DESTROY()
+---++ ObjectMethod finish()
 
 make sure all sub-objects are destroyed as well
 
 =cut
 
-sub DESTROY {
+sub finish {
   my $this = shift;
 
+  $this->{iterator}->finish() if $this->{iterator};
   undef $this->{iterator};
 }
 
@@ -185,8 +186,11 @@ sub handleTOC {
     }
     next unless $start;
 
-    my $text = $elem->as_trimmed_text;
-    next if $text =~ /\0NOTOC2\0/;
+    my $text = _stringifyHeading($elem);
+    if ($text =~ /\0NOTOC2\0/) {
+      _writeDebug("NOTOC detected");
+      next;
+    }
 
     if ($pattern && $text =~ /$pattern/) {
       $text = $1 // $text;
@@ -241,6 +245,33 @@ sub handleTOC {
 
   my $result = Foswiki::Func::decodeFormatTokens($header.join($separator, @lines).$footer);
   return Foswiki::Func::renderText($result);
+}
+
+sub _stringifyHeading {
+  my $elem = shift;
+
+  my @result = ();
+  my @elems = $elem->look_down(
+    sub {
+      my $tag = $_[0]->tag;
+
+      if ($tag eq 'img') {
+        push @result, $_[0]->as_HTML();
+        return 1;
+      }
+
+      if ($tag =~ /^h/) {
+        return 0;
+      }
+
+      my $text = $_[0]->as_trimmed_text;
+      push @result, $text if $text ne "";
+
+      return 1;
+    }
+  );
+
+  return join(" ", @result);
 }
 
 # statics

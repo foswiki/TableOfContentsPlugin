@@ -28,7 +28,7 @@ use warnings;
 
 use Foswiki::Func ();
 
-our $VERSION = '1.00';
+our $VERSION = '1.10';
 our $RELEASE = '%$RELEASE%';
 our $SHORTDESCRIPTION = 'Yet another TOC plugin';
 our $LICENSECODE = '%$LICENSECODE%';
@@ -102,6 +102,7 @@ finish the plugin and the core if it has been used
 =cut
 
 sub finishPlugin {
+  $core->finish() if defined $core;
   undef $core;
 }
 
