@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# TableOfContentsPlugin is Copyright (C) 2017-2024 Michael Daum http://michaeldaumconsulting.com
+# TableOfContentsPlugin is Copyright (C) 2017-2025 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -78,6 +78,7 @@ over all headings contained in the given html
 sub iterator {
   my ($this, $html) = @_;
 
+  _writeDebug("called iterator()");
   $this->{iterator} //= Foswiki::Plugins::TableOfContentsPlugin::HeadingIterator->new($html);
   return $this->{iterator};
 }
@@ -94,6 +95,7 @@ for the toc being generated when the full page is available completeley.
 sub TOC {
   my ($this, $session, $params) = @_;
 
+  _writeDebug("called TOC()");
   my $id = $this->{id}++;
   _writeDebug("toc id=$id");
   return "\0<span class='TOC2' id='toc_$id'><literal>".$params->stringify()."</literal></span>\0";
@@ -125,6 +127,7 @@ sub completePageHandler {
   my $this = shift;
   #my $html = $_[0];
 
+  _writeDebug("called completePageHandler()");
   # clean up HTML
   $_[0] =~ s/<p>\s*(?:<br \/>)*\s*(<div .*?[^\/]>)<\/p>/$1/g;
   $_[0] =~ s/\0<span class='TOC2' id='(toc_\d+)'>(.*?)<\/span>\0/$this->handleTOC($1, $2, $_[0])/ge;
@@ -143,6 +146,7 @@ sub handleTOC {
   my ($this, $tocId, $attrs, $html) = @_;
 
   _writeDebug("called handleToc($tocId)");
+  #_writeDebug("html=$html");
 
   my %params = Foswiki::Func::extractParameters($attrs);
   my $topic = $params{_DEFAULT};
@@ -187,6 +191,8 @@ sub handleTOC {
     next unless $start;
 
     my $text = _stringifyHeading($elem);
+    _writeDebug("text=$text");
+
     if ($text =~ /\0NOTOC2\0/) {
       _writeDebug("NOTOC detected");
       next;
@@ -260,11 +266,11 @@ sub _stringifyHeading {
         return 1;
       }
 
-      if ($tag =~ /^h/) {
-        return 0;
-      }
+      return 0 unless $tag =~ /^h/;
 
       my $text = $_[0]->as_trimmed_text;
+      #_writeDebug("tag=$tag, text=$text");
+
       push @result, $text if $text ne "";
 
       return 1;

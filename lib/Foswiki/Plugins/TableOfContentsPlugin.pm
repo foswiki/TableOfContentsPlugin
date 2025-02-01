@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# TableOfContentsPlugin is Copyright (C) 2017-2024 Michael Daum http://michaeldaumconsulting.com
+# TableOfContentsPlugin is Copyright (C) 2017-2025 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ use warnings;
 
 use Foswiki::Func ();
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 our $RELEASE = '%$RELEASE%';
 our $SHORTDESCRIPTION = 'Yet another TOC plugin';
 our $LICENSECODE = '%$LICENSECODE%';

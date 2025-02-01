@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" date="1420222138" format="1.1" version="1"}%
+%META:TOPICINFO{author="ProjectContributor" date="1738437558" format="1.1" version="1"}%
 ---+!! %TOPIC%
 %FORMFIELD{"Description"}%
 
@@ -51,6 +51,7 @@ Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= et
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  01 Feb 2025 | fixed stringification of headings |
 |  30 Apr 2024 | keep img tags part of a heading in the toc entry |
 |  01 Feb 2024 | initial release |
 
@@ -59,7 +60,7 @@ Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= et
 %META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
-%META:FIELD{name="Copyright" value="2024 Michael Daum"}%
+%META:FIELD{name="Copyright" value="2024-2025 Michael Daum"}%
 %META:FIELD{name="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Repository" value="https://github.com/foswiki/%25TOPIC%25"}%
 %META:FIELD{name="Home" value="https://foswiki.org/Extensions/%25TOPIC%25"}%

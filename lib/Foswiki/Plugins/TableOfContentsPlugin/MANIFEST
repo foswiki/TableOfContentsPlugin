@@ -3,5 +3,6 @@ data/System/TableOfContentsPlugin.txt 0644
 lib/Foswiki/Plugins/TableOfContentsPlugin/Config.spec 0644
 lib/Foswiki/Plugins/TableOfContentsPlugin/Core.pm 0644
 lib/Foswiki/Plugins/TableOfContentsPlugin/DEPENDENCIES 0644
+lib/Foswiki/Plugins/TableOfContentsPlugin/MANIFEST 0644
 lib/Foswiki/Plugins/TableOfContentsPlugin/HeadingIterator.pm 0644
 lib/Foswiki/Plugins/TableOfContentsPlugin.pm 0644
