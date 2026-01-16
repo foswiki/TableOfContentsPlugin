@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# TableOfContentsPlugin is Copyright (C) 2017-2025 Michael Daum http://michaeldaumconsulting.com
+# TableOfContentsPlugin is Copyright (C) 2017-2026 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -157,7 +157,9 @@ sub handleTOC {
   my $depth = $params{depth} // 0;
   my $title = $params{title} // '';
   my $pattern = $params{pattern};
-  my $isGlobal = Foswiki::Func::isTrue($params{global});
+  my $isGlobal = Foswiki::Func::isTrue($params{global}) ? 1:0;
+
+  _writeDebug("... isGlobal=$isGlobal");
 
   return "<span class='foswikiAlert'>ERROR: cannot render TOC of topic <nop>$topic, sorry</span>"
     if $topic;
@@ -170,28 +172,29 @@ sub handleTOC {
   my $start;
   my @items = ();
   my $it = $this->iterator($html);
+  $it->reset if $isGlobal;
   my $startLevel;
 
   while ($it->hasNext()) {
     my $elem = $it->next();
-    my $class = $elem->attr("class") // "";
-    my $id = $elem->attr("id") // "";
+    my $class = $elem->{class} // "";
+    my $id = $elem->{id} // "";
 
     if ($class eq 'TOC2') {
-      if ($id eq $tocId) {
-        if ($start && !$isGlobal) {
-          $it->skip(-1);
-          _writeDebug("... found secondary TOC");
-          last;
-        }
-        $start = $elem;
+      _writeDebug("... found TOC");
+      if ($start && !$isGlobal) {
+        $it->skip(-1);
+        _writeDebug("... shortcutting this TOC ");
+        last;
       }
+      $start = $elem if $id eq $tocId || $isGlobal;
       next;
     }
+    _writeDebug("... no start found yet") unless $start;
     next unless $start;
 
-    my $text = _stringifyHeading($elem);
-    _writeDebug("text=$text");
+    my $text = $elem->{text};
+    _writeDebug("... text=$text");
 
     if ($text =~ /\0NOTOC2\0/) {
       _writeDebug("NOTOC detected");
@@ -203,7 +206,7 @@ sub handleTOC {
     }
     next if $text eq '';
 
-    my ($level) = $elem->starttag =~ /<h(\d)/;
+    my $level = $elem->{level};
     $startLevel //= $level;
     _writeDebug("... depth=$depth, startLevel=$startLevel, level=$level");
     next if $depth && $level > $depth;
@@ -215,7 +218,7 @@ sub handleTOC {
     _writeDebug("... adding ".Encode::encode_utf8($text));
 
     push @items, {
-      id => $elem->attr("id"),
+      id => $elem->{id},
       level => $level,
       text => $text,
     };
@@ -251,33 +254,6 @@ sub handleTOC {
 
   my $result = Foswiki::Func::decodeFormatTokens($header.join($separator, @lines).$footer);
   return Foswiki::Func::renderText($result);
-}
-
-sub _stringifyHeading {
-  my $elem = shift;
-
-  my @result = ();
-  my @elems = $elem->look_down(
-    sub {
-      my $tag = $_[0]->tag;
-
-      if ($tag eq 'img') {
-        push @result, $_[0]->as_HTML();
-        return 1;
-      }
-
-      return 0 unless $tag =~ /^h/;
-
-      my $text = $_[0]->as_trimmed_text;
-      #_writeDebug("tag=$tag, text=$text");
-
-      push @result, $text if $text ne "";
-
-      return 1;
-    }
-  );
-
-  return join(" ", @result);
 }
 
 # statics

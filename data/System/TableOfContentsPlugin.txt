@@ -31,7 +31,8 @@ disabled. The new implementation will be accessible as the =%TOC2= macro.
 | depth | maximum depth of headings being displayed, a zero means unrestricted | 0 |
 | title | toc title | |
 | pattern | regular expression that headings must match to be included in the output | |
-| global | boolean switch to enable "global" vs "local" rendering; in global mode will the toc render entries for the complete document; in local mode will it pick up where a previous toc left off thus rendering partial tocs | local |
+| global | boolean switch to enable "global" vs "local" rendering; in global mode a toc will be rendered for the complete document; \
+           in local mode it stops when a second toc was found; this will then pick up where a previous one left off | local |
 
 The =format= string may contain the following tokens:
 
@@ -51,6 +52,7 @@ Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= et
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  15 Jan 2026 | improved performance by removing dependeny on HTML::TreeBuilder |
 |  01 Feb 2025 | fixed stringification of headings |
 |  30 Apr 2024 | keep img tags part of a heading in the toc entry |
 |  01 Feb 2024 | initial release |
@@ -60,7 +62,7 @@ Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= et
 %META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
-%META:FIELD{name="Copyright" value="2024-2025 Michael Daum"}%
+%META:FIELD{name="Copyright" value="2024-2026 Michael Daum"}%
 %META:FIELD{name="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Repository" value="https://github.com/foswiki/%25TOPIC%25"}%
 %META:FIELD{name="Home" value="https://foswiki.org/Extensions/%25TOPIC%25"}%

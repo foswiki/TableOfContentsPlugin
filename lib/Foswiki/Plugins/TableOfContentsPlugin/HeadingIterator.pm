@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# TableOfContentsPlugin is Copyright (C) 2023-2025 Michael Daum http://michaeldaumconsulting.com
+# TableOfContentsPlugin is Copyright (C) 2023-2026 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,7 +26,6 @@ returns an iterator for all headings contained in a given html fragment
 use strict;
 use warnings;
 
-use HTML::TreeBuilder ();
 use Foswiki::ListIterator ();
 our @ISA = ('Foswiki::ListIterator');
 
@@ -43,37 +42,66 @@ sub new {
 
   die "no html" unless defined $html;
 
-  my $tree = HTML::TreeBuilder->new_from_content($html);
+  my $this = $class->SUPER::new();
 
-  my @list = $tree->look_down(
-    sub {
-      my $tag = $_[0]->tag() // '';
-      my $class = $_[0]->attr("class") // '';
-      my $id = $_[0]->attr("id");
-      return $id && ($tag =~ /^h\d$/ || $class eq 'TOC2');
-    }
-  );
-
-  my $this = $class->SUPER::new(\@list);
-
-  $this->{tree} = $tree;
+  $this->parse($html);
 
   return $this;
+}
+
+sub parse {
+  my ($this, $html) = @_;
+
+  my @list;
+
+  while ($html =~ /(?:<(h)(\d)(?:.*?id=['"](.*?)["'][^>]*?)?>(.*?)<\/h\2>)|(?:<(span)\s+class='TOC2'\s+id='(toc_\d+)'>.*?<\/span>)/gi) {
+    my $tag = lc($1 // $5);
+    if ($tag eq 'h') {
+      my $level = $2;
+      my $id = $3;
+      my $text = $4;
+
+      next unless $id;
+
+      while ($text =~ s/<(\w+)\s+[^>]*?>(.*?)<\/\1>/$2/g) {
+        # nop
+      }
+
+      $text =~ s/^\s+//;
+      $text =~ s/\s+$//;
+
+      push @list, {
+        tag => $tag,
+        id => $id,
+        level => $level,
+        text => $text,
+      };
+    } 
+
+    if ($tag eq 'span') {
+      my $id = $6;
+
+      push @list, {
+        tag => $tag,
+        id => $id,
+        class => "TOC2",
+      };
+    }
+  }
+
+  $this->{list} = \@list;
 }
 
 =begin TML
 
 ---++ ObjectMethod finish()
 
-deletes the HTML::TreeBuilder delegate as well
-
 =cut
 
 sub finish {
   my $this = shift;
 
-  $this->{tree}->delete if $this->{tree};
-  undef $this->{tree};
+  undef $this->{list};
 }
 
 =begin TML
