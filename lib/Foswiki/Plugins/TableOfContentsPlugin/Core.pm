@@ -157,6 +157,8 @@ sub handleTOC {
   my $depth = $params{depth} // 0;
   my $title = $params{title} // '';
   my $pattern = $params{pattern};
+  my $include = $params{include};
+  my $exclude = $params{exclude};
   my $isGlobal = Foswiki::Func::isTrue($params{global}) ? 1:0;
 
   _writeDebug("... isGlobal=$isGlobal");
@@ -201,6 +203,9 @@ sub handleTOC {
       next;
     }
 
+    next if $include && $text !~ /$include/;
+    next if $exclude && $text =~ /$exclude/;
+
     if ($pattern && $text =~ /$pattern/) {
       $text = $1 // $text;
     }
@@ -208,13 +213,16 @@ sub handleTOC {
 
     my $level = $elem->{level};
     $startLevel //= $level;
-    _writeDebug("... depth=$depth, startLevel=$startLevel, level=$level");
-    next if $depth && $level > $depth;
 
+    # stop if level is lower than start 
+    _writeDebug("... depth=$depth, startLevel=$startLevel, level=$level");
+
+    next if $depth && $level > $depth;
     if ($level < $startLevel) {
       $it->skip(-1);
       last;
     }
+
     _writeDebug("... adding ".Encode::encode_utf8($text));
 
     push @items, {
@@ -239,7 +247,8 @@ sub handleTOC {
   # create output
   my @lines = ();
   push @lines, "<span class='foswikiTocTitle'>$title</span>" if $title ne "";
-  push @lines, "<div class='foswikiToc'><noautolink>";
+  $params{class} ||= 'foswikiToc';
+  push @lines, "<div class='$params{class}'><noautolink>";
 
   foreach my $item (@items) {
     my $indent = "   " x $item->{level};

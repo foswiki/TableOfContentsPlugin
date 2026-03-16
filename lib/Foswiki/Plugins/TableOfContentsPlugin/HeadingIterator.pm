@@ -69,6 +69,7 @@ sub parse {
 
       $text =~ s/^\s+//;
       $text =~ s/\s+$//;
+      next if $text eq '';
 
       push @list, {
         tag => $tag,
@@ -76,9 +77,7 @@ sub parse {
         level => $level,
         text => $text,
       };
-    } 
-
-    if ($tag eq 'span') {
+    } elsif ($tag eq 'span') {
       my $id = $6;
 
       push @list, {

@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" date="1738437558" format="1.1" version="1"}%
+%META:TOPICINFO{author="ProjectContributor" date="1773668340" format="1.1" version="1"}%
 ---+!! %TOPIC%
 %FORMFIELD{"Description"}%
 
@@ -30,9 +30,12 @@ disabled. The new implementation will be accessible as the =%TOC2= macro.
 | footer | string to be appended to the result | |
 | depth | maximum depth of headings being displayed, a zero means unrestricted | 0 |
 | title | toc title | |
-| pattern | regular expression that headings must match to be included in the output | |
+| include | regular expression that headings must match to be included in the output | |
+| exclude | regular expression that headings must NOT match to be included in the output | |
+| pattern | pattern to process the heading text with; must contain a group in brackets; e.g. =pattern="(\d+)"= ... instead of the full heading text only the numerical part will be extracted | |
 | global | boolean switch to enable "global" vs "local" rendering; in global mode a toc will be rendered for the complete document; \
            in local mode it stops when a second toc was found; this will then pick up where a previous one left off | local |
+| class | css class of the container holding the table of contents list | =foswikiToc= |
 
 The =format= string may contain the following tokens:
 
@@ -52,6 +55,7 @@ Any standard escapes are available as well such as =$percnt=, =$dollar=, =$n= et
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  12 Mar 2026 | fixed pattern, added include, exclude and class parameters |
 |  15 Jan 2026 | improved performance by removing dependeny on HTML::TreeBuilder |
 |  01 Feb 2025 | fixed stringification of headings |
 |  30 Apr 2024 | keep img tags part of a heading in the toc entry |

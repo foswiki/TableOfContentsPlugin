@@ -28,7 +28,7 @@ use warnings;
 
 use Foswiki::Func ();
 
-our $VERSION = '2.00';
+our $VERSION = '3.00';
 our $RELEASE = '%$RELEASE%';
 our $SHORTDESCRIPTION = 'Yet another TOC plugin';
 our $LICENSECODE = '%$LICENSECODE%';
